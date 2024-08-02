@@ -17,9 +17,11 @@ function App() {
   const [jsonData, setJsonData] = useState('');
   const [response, setResponse] = useState(null);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [loading, setLoading] = useState(false); // New state for loading
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when request starts
     try {
       console.log('JSON Input:', jsonData);
 
@@ -37,6 +39,8 @@ function App() {
     } catch (error) {
       alert('Invalid JSON or request failed');
       console.error('Error:', error);
+    } finally {
+      setLoading(false); // Set loading to false when request completes
     }
   };
 
@@ -76,18 +80,19 @@ function App() {
     <div className="App">
       <form onSubmit={handleSubmit}>
         <label>
-          JSON Input : 
-          </label>
-          <textarea
-            value={jsonData}
-            onChange={(e) => setJsonData(e.target.value)}
-            required
-          />
-        
+          JSON Input:
+        </label>
+        <textarea
+          value={jsonData}
+          onChange={(e) => setJsonData(e.target.value)}
+          required
+        />
         <button type="submit">Submit</button>
       </form>
 
-      {response && (
+      {loading && <p>Loading...</p>} {/* Show loading message while waiting */}
+
+      {!loading && response && (
         <div>
           <Select
             isMulti
